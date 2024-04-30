@@ -1,13 +1,17 @@
-FROM ruby:3.0
+# Use the official Ruby image from Docker Hub
+FROM ruby:latest
 
-# throw errors if Gemfile has been modified since Gemfile.lock
-RUN bundle config --global frozen 1
+# Set the working directory inside the container
+WORKDIR /app
 
-WORKDIR /usr/src/app
-
+# Copy the Gemfile and Gemfile.lock into the container
 COPY Gemfile Gemfile.lock ./
+
+# Install dependencies using bundler
 RUN bundle install
 
+# Copy the rest of the application code into the container
 COPY . .
 
-CMD ["./your-daemon-or-script.rb"]
+# Command to run the application
+CMD ["ruby", "app.rb"]

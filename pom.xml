@@ -21,6 +21,7 @@
             <artifactId>jackson-dataformat-yaml</artifactId>
             <version>${jackson-dataformat-yaml.version}</version>
         </dependency>
+  
 
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -28,5 +29,12 @@
             <version>${junit-jupiter-params.version}</version>
             <scope>test</scope>
         </dependency>
+        <distributionManagement>
+            <snapshotRepository>
+            <id>snapshots</id>
+            <name>ip-172-31-41-156-snapshots</name>
+            <url>http://13.53.193.112:8081/artifactory/libs-snapshot-local</url>
+            </snapshotRepository>
+        </distributionManagement>
     </dependencies>
 </project>

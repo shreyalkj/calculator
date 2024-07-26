@@ -13,7 +13,7 @@ class CalculatorUITest {
 
     @BeforeEach
     void setUp() {
-        calculatorUI3 = new CalculatorUI3();
+        calculatorUI3 = new CalculatorUI();
     }
 
     @ParameterizedTest

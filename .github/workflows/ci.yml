@@ -1,16 +1,19 @@
-name: Java CI with Maven
+name: Java CI with Maven on Fedora
 
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
     branches:
-      - master
+      - main
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # Running Fedora container on Ubuntu
+
+    container:
+      image: fedora:latest   # Using Fedora as the container image
 
     steps:
     - name: Checkout code
@@ -19,7 +22,12 @@ jobs:
     - name: Set up JDK 11
       uses: actions/setup-java@v3
       with:
+        distribution: 'adopt'  # Required field, choose a Java distribution (adopt, zulu, etc.)
         java-version: '11'
+
+    - name: Install Maven
+      run: |
+        dnf install -y maven
 
     - name: Build with Maven
       run: mvn clean install

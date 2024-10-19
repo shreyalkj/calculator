@@ -1,30 +1,35 @@
 name: Java CI with Maven on Ubuntu
 
-# Trigger the workflow on push to the master branch or when a pull request is opened
 on:
   push:
     branches:
-      - master  # Use master instead of main
+      - master
   pull_request:
     branches:
-      - master  # Run the workflow on pull requests to the master branch
+      - master
 
 jobs:
   build:
-    runs-on: ubuntu-latest  # Run on the Ubuntu runner provided by GitHub
+    runs-on: ubuntu-latest
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3  # Updated to v3 to avoid deprecation warnings
+      uses: actions/checkout@v3
 
     - name: Set up JDK 11
-      uses: actions/setup-java@v3  # Updated to v3 to avoid deprecation warnings
+      uses: actions/setup-java@v3
       with:
-        distribution: 'adopt'  # Choose a Java distribution (adopt, temurin, zulu, etc.)
-        java-version: '11'     # Specify the Java version (use 11 or adjust as needed)
+        distribution: 'adopt'
+        java-version: '11'
 
     - name: Build with Maven
-      run: mvn clean install  # Build the project with Maven
+      run: mvn clean install
 
-    - name: Run tests
-      run: mvn test  # Run tests using Maven
+    - name: SonarCloud Scan
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  # Use the SonarCloud token stored as a secret
+      run: mvn sonar:sonar \
+        -Dsonar.projectKey=Calculator \
+        -Dsonar.organization=arouiss \
+        -Dsonar.host.url=https://sonarcloud.io \
+        -Dsonar.login=${{ secrets.SONAR_TOKEN }}

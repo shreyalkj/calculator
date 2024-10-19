@@ -1,37 +1,30 @@
-name: Java CI with Maven on Fedora
+name: Java CI with Maven on Ubuntu
 
+# Trigger the workflow on push to the master branch or when a pull request is opened
 on:
   push:
     branches:
-      - main
+      - master  # Use master instead of main
   pull_request:
     branches:
-      - main
+      - master  # Run the workflow on pull requests to the master branch
 
 jobs:
   build:
-    runs-on: ubuntu-latest  # Running Fedora container on Ubuntu
-
-    container:
-      image: fedora:latest   # Using Fedora as the container image
+    runs-on: ubuntu-latest  # Run on the Ubuntu runner provided by GitHub
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3  # Updated to v3 to avoid deprecation warnings
 
     - name: Set up JDK 11
-      uses: actions/setup-java@v3
+      uses: actions/setup-java@v3  # Updated to v3 to avoid deprecation warnings
       with:
-        distribution: 'adopt'  # Required field, choose a Java distribution (adopt, zulu, etc.)
-        java-version: '11'
-
-    - name: Install Maven
-      run: |
-        dnf install -y maven
+        distribution: 'adopt'  # Choose a Java distribution (adopt, temurin, zulu, etc.)
+        java-version: '11'     # Specify the Java version (use 11 or adjust as needed)
 
     - name: Build with Maven
-      run: mvn clean install
+      run: mvn clean install  # Build the project with Maven
 
     - name: Run tests
-      run: mvn test
-
+      run: mvn test  # Run tests using Maven

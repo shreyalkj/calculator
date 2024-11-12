@@ -460,7 +460,7 @@ public class CalculatorUI {
                 } else {
                     inputScreen.setText(String.valueOf(typedValue));
                 }
-                selectedOperator = '√';
+                selectedOperator = '\u221A';
                 addToDisplay = false;
             }
         });
@@ -506,6 +506,36 @@ public class CalculatorUI {
         });
         btnLog.setVisible(false);
     }
+
+    btnC = createButton("C", columns[0], rows[0]);
+    btnC.addActionListener(event -> {
+        inputScreen.setText("0");
+        addToDisplay = true;
+        go = true;
+    });
+
+    btnBack = createButton("←", columns[1], rows[0]);
+    btnBack.addActionListener(event -> {
+        String currentText = inputScreen.getText();
+        if (currentText.length() > 1) {
+            inputScreen.setText(currentText.substring(0, currentText.length() - 1));
+        } else {
+            inputScreen.setText("0");
+        }
+        go = true;
+    });
+
+    // New Button - Pi
+    btnPi = createButton("π", columns[2], rows[0]); // Adding Pi button
+    btnPi.addActionListener(event -> {
+        if (addToDisplay) {
+            inputScreen.setText(inputScreen.getText() + Math.PI);
+        } else {
+            inputScreen.setText(String.valueOf(Math.PI));
+            addToDisplay = true;
+        }
+        go = true;
+    });
 
     private JComboBox<String> createComboBox(String[] items, int x, int y, String toolTip) {
         JComboBox<String> combo = new JComboBox<>(items);

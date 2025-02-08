@@ -25,6 +25,14 @@ public class CalculatorUI {
     private static final int MARGIN_X = 20;
     private static final int MARGIN_Y = 60;
 
+    // Adding constants for magic numbers
+    private static final int COLUMN_GAP = 90;
+    private static final int ROW_GAP = 80;
+    private static final int INPUT_SCREEN_WIDTH = 350;
+    private static final int INPUT_SCREEN_HEIGHT = 70;
+    private static final int COMBO_BOX_WIDTH = 140;
+    private static final int COMBO_BOX_HEIGHT = 25;
+
     private final JFrame window;
     private JComboBox<String> comboCalculatorType;
     private JComboBox<String> comboTheme;
@@ -66,9 +74,11 @@ public class CalculatorUI {
         window.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         window.setLocationRelativeTo(null);
 
-        int[] columns = { MARGIN_X, MARGIN_X + 90, MARGIN_X + 90 * 2, MARGIN_X + 90 * 3, MARGIN_X + 90 * 4 };
-        int[] rows = { MARGIN_Y, MARGIN_Y + 100, MARGIN_Y + 100 + 80, MARGIN_Y + 100 + 80 * 2, MARGIN_Y + 100 + 80 * 3,
-                MARGIN_Y + 100 + 80 * 4 };
+        int[] columns = { MARGIN_X, MARGIN_X + COLUMN_GAP, MARGIN_X + COLUMN_GAP * 2, MARGIN_X + COLUMN_GAP * 3,
+                MARGIN_X + COLUMN_GAP * 4 };
+        int[] rows = { MARGIN_Y, MARGIN_Y + 100, MARGIN_Y + 100 + ROW_GAP, MARGIN_Y + 100 + ROW_GAP * 2,
+                MARGIN_Y + 100 + ROW_GAP * 3,
+                MARGIN_Y + 100 + ROW_GAP * 4 };
 
         initInputScreen(columns, rows);
         initButtons(columns, rows);
@@ -118,7 +128,7 @@ public class CalculatorUI {
 
     private void initInputScreen(int[] columns, int[] rows) {
         inputScreen = new JTextField("0");
-        inputScreen.setBounds(columns[0], rows[0], 350, 70);
+        inputScreen.setBounds(columns[0], rows[0], INPUT_SCREEN_WIDTH, INPUT_SCREEN_HEIGHT);
         inputScreen.setEditable(false);
         inputScreen.setBackground(Color.WHITE);
         inputScreen.setFont(new Font(FONT_NAME, Font.PLAIN, 33));
@@ -140,7 +150,7 @@ public class CalculatorUI {
                     btnLog.setVisible(false);
                     break;
                 case "Scientific":
-                    window.setSize(WINDOW_WIDTH + 80, WINDOW_HEIGHT);
+                    window.setSize(WINDOW_WIDTH + ROW_GAP, WINDOW_HEIGHT);
                     btnRoot.setVisible(true); // show scientific function buttons
                     btnPower.setVisible(true);
                     btnLog.setVisible(true);
@@ -512,7 +522,7 @@ public class CalculatorUI {
 
     private JComboBox<String> createComboBox(String[] items, int x, int y, String toolTip) {
         JComboBox<String> combo = new JComboBox<>(items);
-        combo.setBounds(x, y, 140, 25);
+        combo.setBounds(x, y, COMBO_BOX_WIDTH, COMBO_BOX_HEIGHT);
         combo.setToolTipText(toolTip);
         combo.setCursor(new Cursor(Cursor.HAND_CURSOR));
         window.add(combo);

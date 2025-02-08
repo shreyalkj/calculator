@@ -25,6 +25,14 @@ public class CalculatorUI {
     private static final int MARGIN_X = 20;
     private static final int MARGIN_Y = 60;
 
+    // Adding constants for magic numbers
+    private static final int COLUMN_GAP = 90;
+    private static final int ROW_GAP = 80;
+    private static final int INPUT_SCREEN_WIDTH = 350;
+    private static final int INPUT_SCREEN_HEIGHT = 70;
+    private static final int COMBO_BOX_WIDTH = 140;
+    private static final int COMBO_BOX_HEIGHT = 25;
+
     private final JFrame window;
     private JComboBox<String> comboCalculatorType;
     private JComboBox<String> comboTheme;
@@ -66,8 +74,11 @@ public class CalculatorUI {
         window.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         window.setLocationRelativeTo(null);
 
-        int[] columns = {MARGIN_X, MARGIN_X + 90, MARGIN_X + 90 * 2, MARGIN_X + 90 * 3, MARGIN_X + 90 * 4};
-        int[] rows = {MARGIN_Y, MARGIN_Y + 100, MARGIN_Y + 100 + 80, MARGIN_Y + 100 + 80 * 2, MARGIN_Y + 100 + 80 * 3, MARGIN_Y + 100 + 80 * 4};
+        int[] columns = { MARGIN_X, MARGIN_X + COLUMN_GAP, MARGIN_X + COLUMN_GAP * 2, MARGIN_X + COLUMN_GAP * 3,
+                MARGIN_X + COLUMN_GAP * 4 };
+        int[] rows = { MARGIN_Y, MARGIN_Y + 100, MARGIN_Y + 100 + ROW_GAP, MARGIN_Y + 100 + ROW_GAP * 2,
+                MARGIN_Y + 100 + ROW_GAP * 3,
+                MARGIN_Y + 100 + ROW_GAP * 4 };
 
         initInputScreen(columns, rows);
         initButtons(columns, rows);
@@ -96,7 +107,7 @@ public class CalculatorUI {
             case '^':
                 return Math.pow(firstNumber, secondNumber);
             default:
-                return secondNumber;
+                return secondNumber; // return secondNumber if no valid operator
         }
     }
 
@@ -104,10 +115,10 @@ public class CalculatorUI {
         comboTheme = createComboBox(themesMap.keySet().toArray(new String[0]), 230, 30, "Theme");
         comboTheme.addItemListener(event -> {
             if (event.getStateChange() != ItemEvent.SELECTED)
-                return;
+                return; // only execute if an item is selceted
 
             String selectedTheme = (String) event.getItem();
-            applyTheme(themesMap.get(selectedTheme));
+            applyTheme(themesMap.get(selectedTheme)); // apply the selected theme
         });
 
         if (themesMap.entrySet().iterator().hasNext()) {
@@ -117,7 +128,7 @@ public class CalculatorUI {
 
     private void initInputScreen(int[] columns, int[] rows) {
         inputScreen = new JTextField("0");
-        inputScreen.setBounds(columns[0], rows[0], 350, 70);
+        inputScreen.setBounds(columns[0], rows[0], INPUT_SCREEN_WIDTH, INPUT_SCREEN_HEIGHT);
         inputScreen.setEditable(false);
         inputScreen.setBackground(Color.WHITE);
         inputScreen.setFont(new Font(FONT_NAME, Font.PLAIN, 33));
@@ -125,22 +136,22 @@ public class CalculatorUI {
     }
 
     private void initCalculatorTypeSelector() {
-        comboCalculatorType = createComboBox(new String[]{"Standard", "Scientific"}, 20, 30, "Calculator type");
+        comboCalculatorType = createComboBox(new String[] { "Standard", "Scientific" }, 20, 30, "Calculator type");
         comboCalculatorType.addItemListener(event -> {
             if (event.getStateChange() != ItemEvent.SELECTED)
-                return;
+                return; // only execute if an item is selected
 
             String selectedItem = (String) event.getItem();
             switch (selectedItem) {
                 case "Standard":
                     window.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-                    btnRoot.setVisible(false);
+                    btnRoot.setVisible(false); // hide scientific function buttons
                     btnPower.setVisible(false);
                     btnLog.setVisible(false);
                     break;
                 case "Scientific":
-                    window.setSize(WINDOW_WIDTH + 80, WINDOW_HEIGHT);
-                    btnRoot.setVisible(true);
+                    window.setSize(WINDOW_WIDTH + ROW_GAP, WINDOW_HEIGHT);
+                    btnRoot.setVisible(true); // show scientific function buttons
                     btnPower.setVisible(true);
                     btnLog.setVisible(true);
                     break;
@@ -161,7 +172,7 @@ public class CalculatorUI {
             String str = inputScreen.getText();
             StringBuilder str2 = new StringBuilder();
             for (int i = 0; i < (str.length() - 1); i++) {
-                str2.append(str.charAt(i));
+                str2.append(str.charAt(i)); // remove the last character
             }
             if (str2.toString().equals("")) {
                 inputScreen.setText("0");
@@ -173,17 +184,17 @@ public class CalculatorUI {
         btnMod = createButton("%", columns[2], rows[1]);
         btnMod.addActionListener(event -> {
             if (!Pattern.matches(DOUBLE_OR_NUMBER_REGEX, inputScreen.getText()) || !go)
-                return;
+                return; // validate input
 
             typedValue = calculate(typedValue, Double.parseDouble(inputScreen.getText()), selectedOperator);
             if (Pattern.matches("[-]?[\\d]+[.][0]*", String.valueOf(typedValue))) {
-                inputScreen.setText(String.valueOf((int) typedValue));
+                inputScreen.setText(String.valueOf((int) typedValue)); // display as integer if no decimal
             } else {
                 inputScreen.setText(String.valueOf(typedValue));
             }
             selectedOperator = '%';
-            go = false;
-            addToDisplay = false;
+            go = false; // cannot continue calculation
+            addToDisplay = false; // do not add to display
         });
 
         btnDiv = createButton("/", columns[3], rows[1]);
@@ -194,15 +205,15 @@ public class CalculatorUI {
             if (go) {
                 typedValue = calculate(typedValue, Double.parseDouble(inputScreen.getText()), selectedOperator);
                 if (Pattern.matches("[-]?[\\d]+[.][0]*", String.valueOf(typedValue))) {
-                    inputScreen.setText(String.valueOf((int) typedValue));
+                    inputScreen.setText(String.valueOf((int) typedValue)); // Display as integer if no decimal
                 } else {
                     inputScreen.setText(String.valueOf(typedValue));
                 }
                 selectedOperator = '/';
-                go = false;
-                addToDisplay = false;
+                go = false; // Cannot continue calculation
+                addToDisplay = false; // Do not add to display
             } else {
-                selectedOperator = '/';
+                selectedOperator = '/'; // If cannot continue, set operator
             }
         });
 
@@ -216,9 +227,9 @@ public class CalculatorUI {
                 }
             } else {
                 inputScreen.setText("7");
-                addToDisplay = true;
+                addToDisplay = true; // Set to add next number
             }
-            go = true;
+            go = true; // Allow calculation to continue
         });
 
         btn8 = createButton("8", columns[1], rows[2]);
@@ -254,23 +265,24 @@ public class CalculatorUI {
         btnMul = createButton("*", columns[3], rows[2]);
         btnMul.addActionListener(event -> {
             if (!Pattern.matches(DOUBLE_OR_NUMBER_REGEX, inputScreen.getText()))
-                return;
+                return; // validate input
 
             if (go) {
                 typedValue = calculate(typedValue, Double.parseDouble(inputScreen.getText()), selectedOperator);
                 if (Pattern.matches("[-]?[\\d]+[.][0]*", String.valueOf(typedValue))) {
-                    inputScreen.setText(String.valueOf((int) typedValue));
+                    inputScreen.setText(String.valueOf((int) typedValue)); // display as integer if no decimal
                 } else {
                     inputScreen.setText(String.valueOf(typedValue));
                 }
                 selectedOperator = '*';
-                go = false;
-                addToDisplay = false;
+                go = false; // cannot continue canculation
+                addToDisplay = false; // do not add to display
             } else {
-                selectedOperator = '*';
+                selectedOperator = '*'; // f cannot continue, set operator
             }
         });
 
+        // Number button 4-6
         btn4 = createButton("4", columns[0], rows[3]);
         btn4.addActionListener(event -> {
             if (addToDisplay) {
@@ -319,24 +331,25 @@ public class CalculatorUI {
         btnSub = createButton("-", columns[3], rows[3]);
         btnSub.addActionListener(event -> {
             if (!Pattern.matches(DOUBLE_OR_NUMBER_REGEX, inputScreen.getText()))
-                return;
+                return; // validate input
 
             if (go) {
                 typedValue = calculate(typedValue, Double.parseDouble(inputScreen.getText()), selectedOperator);
                 if (Pattern.matches("[-]?[\\d]+[.][0]*", String.valueOf(typedValue))) {
-                    inputScreen.setText(String.valueOf((int) typedValue));
+                    inputScreen.setText(String.valueOf((int) typedValue)); // display as integer if no decimal
                 } else {
                     inputScreen.setText(String.valueOf(typedValue));
                 }
 
                 selectedOperator = '-';
-                go = false;
+                go = false; // cannot continue calculation
                 addToDisplay = false;
             } else {
-                selectedOperator = '-';
+                selectedOperator = '-'; // if cannot continue, set operator
             }
         });
 
+        // Number buttons 1-3
         btn1 = createButton("1", columns[0], rows[4]);
         btn1.addActionListener(event -> {
             if (addToDisplay) {
@@ -385,20 +398,20 @@ public class CalculatorUI {
         btnAdd = createButton("+", columns[3], rows[4]);
         btnAdd.addActionListener(event -> {
             if (!Pattern.matches(DOUBLE_OR_NUMBER_REGEX, inputScreen.getText()))
-                return;
+                return; // validate input
 
             if (go) {
                 typedValue = calculate(typedValue, Double.parseDouble(inputScreen.getText()), selectedOperator);
                 if (Pattern.matches("[-]?[\\d]+[.][0]*", String.valueOf(typedValue))) {
-                    inputScreen.setText(String.valueOf((int) typedValue));
+                    inputScreen.setText(String.valueOf((int) typedValue)); // display as integer if no decimal
                 } else {
                     inputScreen.setText(String.valueOf(typedValue));
                 }
                 selectedOperator = '+';
-                go = false;
-                addToDisplay = false;
+                go = false; // cannot continue calculation
+                addToDisplay = false; // do not add to display
             } else {
-                selectedOperator = '+';
+                selectedOperator = '+'; // if cannot continue, set operator
             }
         });
 
@@ -406,28 +419,28 @@ public class CalculatorUI {
         btnPoint.addActionListener(event -> {
             if (addToDisplay) {
                 if (!inputScreen.getText().contains(".")) {
-                    inputScreen.setText(inputScreen.getText() + ".");
+                    inputScreen.setText(inputScreen.getText() + "."); // add decimal point if not present
                 }
             } else {
-                inputScreen.setText("0.");
-                addToDisplay = true;
+                inputScreen.setText("0."); // set display to 0
+                addToDisplay = true; // set to add next number
             }
-            go = true;
+            go = true; // allow calculation to continue
         });
 
         btn0 = createButton("0", columns[1], rows[5]);
         btn0.addActionListener(event -> {
             if (addToDisplay) {
                 if (Pattern.matches("[0]*", inputScreen.getText())) {
-                    inputScreen.setText("0");
+                    inputScreen.setText("0"); // if display is 0, keep it 0
                 } else {
-                    inputScreen.setText(inputScreen.getText() + "0");
+                    inputScreen.setText(inputScreen.getText() + "0"); // add 0 to display
                 }
             } else {
-                inputScreen.setText("0");
-                addToDisplay = true;
+                inputScreen.setText("0"); // set display to 0
+                addToDisplay = true; // set to add next number
             }
-            go = true;
+            go = true; // allow calculation to continue
         });
 
         btnEqual = createButton("=", columns[2], rows[5]);
@@ -438,15 +451,15 @@ public class CalculatorUI {
             if (go) {
                 typedValue = calculate(typedValue, Double.parseDouble(inputScreen.getText()), selectedOperator);
                 if (Pattern.matches("[-]?[\\d]+[.][0]*", String.valueOf(typedValue))) {
-                    inputScreen.setText(String.valueOf((int) typedValue));
+                    inputScreen.setText(String.valueOf((int) typedValue)); // display as integer if no decimal
                 } else {
                     inputScreen.setText(String.valueOf(typedValue));
                 }
-                selectedOperator = '=';
-                addToDisplay = false;
+                selectedOperator = '='; // set operator
+                addToDisplay = false; // do not add to display
             }
         });
-        btnEqual.setSize(2 * BUTTON_WIDTH + 10, BUTTON_HEIGHT);
+        btnEqual.setSize(2 * BUTTON_WIDTH + 10, BUTTON_HEIGHT); // size button to span two button widths
 
         btnRoot = createButton("√", columns[4], rows[1]);
         btnRoot.addActionListener(event -> {
@@ -454,62 +467,62 @@ public class CalculatorUI {
                 return;
 
             if (go) {
-                typedValue = Math.sqrt(Double.parseDouble(inputScreen.getText()));
+                typedValue = Math.sqrt(Double.parseDouble(inputScreen.getText())); // calculate square root
                 if (Pattern.matches("[-]?[\\d]+[.][0]*", String.valueOf(typedValue))) {
-                    inputScreen.setText(String.valueOf((int) typedValue));
+                    inputScreen.setText(String.valueOf((int) typedValue)); // display as integer if no decimal
                 } else {
                     inputScreen.setText(String.valueOf(typedValue));
                 }
-                selectedOperator = '√';
-                addToDisplay = false;
+                selectedOperator = '√'; // set operator
+                addToDisplay = false; // do not add to display
             }
         });
-        btnRoot.setVisible(false);
+        btnRoot.setVisible(false); // Hide button for standard calculator
 
         btnPower = createButton("pow", columns[4], rows[2]);
         btnPower.addActionListener(event -> {
             if (!Pattern.matches(DOUBLE_OR_NUMBER_REGEX, inputScreen.getText()))
-                return;
+                return; // validate input
 
             if (go) {
                 typedValue = calculate(typedValue, Double.parseDouble(inputScreen.getText()), selectedOperator);
                 if (Pattern.matches("[-]?[\\d]+[.][0]*", String.valueOf(typedValue))) {
-                    inputScreen.setText(String.valueOf((int) typedValue));
+                    inputScreen.setText(String.valueOf((int) typedValue)); // display as integer if no decimal
                 } else {
                     inputScreen.setText(String.valueOf(typedValue));
                 }
-                selectedOperator = '^';
-                go = false;
-                addToDisplay = false;
+                selectedOperator = '^'; // set operator
+                go = false; // cannor continue calcualtion
+                addToDisplay = false; // do not add to display
             } else {
-                selectedOperator = '^';
+                selectedOperator = '^'; // if cannot continue, set operator
             }
         });
         btnPower.setFont(new Font("Comic Sans MS", Font.PLAIN, 24));
-        btnPower.setVisible(false);
+        btnPower.setVisible(false); // hide button for standard calculator
 
         btnLog = createButton("ln", columns[4], rows[3]);
         btnLog.addActionListener(event -> {
             if (!Pattern.matches(DOUBLE_OR_NUMBER_REGEX, inputScreen.getText()))
-                return;
+                return; // validate input
 
             if (go) {
                 typedValue = Math.log(Double.parseDouble(inputScreen.getText()));
                 if (Pattern.matches("[-]?[\\d]+[.][0]*", String.valueOf(typedValue))) {
-                    inputScreen.setText(String.valueOf((int) typedValue));
+                    inputScreen.setText(String.valueOf((int) typedValue)); // display as integer if no decimal
                 } else {
                     inputScreen.setText(String.valueOf(typedValue));
                 }
-                selectedOperator = 'l';
-                addToDisplay = false;
+                selectedOperator = 'l'; // set operator
+                addToDisplay = false; // do not add to displat
             }
         });
-        btnLog.setVisible(false);
+        btnLog.setVisible(false); // hide button for standard calculator
     }
 
     private JComboBox<String> createComboBox(String[] items, int x, int y, String toolTip) {
         JComboBox<String> combo = new JComboBox<>(items);
-        combo.setBounds(x, y, 140, 25);
+        combo.setBounds(x, y, COMBO_BOX_WIDTH, COMBO_BOX_HEIGHT);
         combo.setToolTipText(toolTip);
         combo.setCursor(new Cursor(Cursor.HAND_CURSOR));
         window.add(combo);
@@ -531,6 +544,7 @@ public class CalculatorUI {
     private void applyTheme(Theme theme) {
         window.getContentPane().setBackground(hex2Color(theme.getApplicationBackground()));
 
+        // set text color for various components
         comboCalculatorType.setForeground(hex2Color(theme.getTextColor()));
         comboTheme.setForeground(hex2Color(theme.getTextColor()));
         inputScreen.setForeground(hex2Color(theme.getTextColor()));
@@ -557,6 +571,7 @@ public class CalculatorUI {
         btnPower.setForeground(hex2Color(theme.getTextColor()));
         btnEqual.setForeground(hex2Color(theme.getBtnEqualTextColor()));
 
+        // set background color for various components
         comboCalculatorType.setBackground(hex2Color(theme.getApplicationBackground()));
         comboTheme.setBackground(hex2Color(theme.getApplicationBackground()));
         inputScreen.setBackground(hex2Color(theme.getApplicationBackground()));

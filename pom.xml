@@ -1,3 +1,11 @@
+Console.WriteLine("Abdullah Mahmood");
+console.WriteLine("24-ST-003");
+Console.WriteLine("enter the number 1 ");
+int a = convert.ToInt32(Console.ReadLine());
+Console.WriteLine("Enter the number 2");
+int b = Convert.ToInt32(Console.ReadLine());
+int sum = a + b;
+Console.WriteLine("the sum of two number is " + sum );
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"

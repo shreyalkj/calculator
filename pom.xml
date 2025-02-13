@@ -1,3 +1,9 @@
+Console.WriteLine("Abdul Rehman");
+Console.WriteLine("24-ST-041");
+Console.WriteLine("Enter the number 1");
+int a = Convert.ToInt32(Console.ReadLine());
+Console.WriteLine("Enter the number 2");
+int b = Convert.ToInt32(Console.Readline());
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"

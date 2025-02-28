@@ -1,24 +1,41 @@
-package com.houarizegai.calculator;
+package com.example.calculator.service;
 
-import com.houarizegai.calculator.ui.CalculatorUI;
+import static org.junit.jupiter.api.Assertions.*;
+
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+class CalculatorServiceTest {
 
-class CalculatorUITest {
-
-    private CalculatorUI calculatorUI;
+    private CalculatorService calculatorService;
 
     @BeforeEach
     void setUp() {
-        calculatorUI = new CalculatorUI();
+        calculatorService = new CalculatorService();
     }
 
-    @ParameterizedTest
-    @CsvSource({"3,5,+,8", "2,8,-,-6", "44.5,10,*,445", "320,5,/,64", "3,5,%,3", "5,3,^,125"})
-    void testCalculation(double firstNumber, double secondNumber, char operator, double expectedResult) {
-        assertEquals(expectedResult, calculatorUI.calculate(firstNumber, secondNumber, operator));
+    @Test
+    void testAddition() {
+        assertEquals(10, calculatorService.add(5, 5));
+    }
+
+    @Test
+    void testSubtraction() {
+        assertEquals(3, calculatorService.subtract(8, 5));
+    }
+
+    @Test
+    void testMultiplication() {
+        assertEquals(20, calculatorService.multiply(4, 5));
+    }
+
+    @Test
+    void testDivision() {
+        assertEquals(2, calculatorService.divide(10, 5));
+    }
+
+    @Test
+    void testDivisionByZero() {
+        assertThrows(ArithmeticException.class, () -> calculatorService.divide(10, 0));
     }
 }
